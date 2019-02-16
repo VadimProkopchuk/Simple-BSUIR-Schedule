@@ -1,8 +1,8 @@
 <template>
   <b-container class="p-3">
-    <b-row v-if="schedule">
+    <b-row v-if="hasExistSchedule">
       <b-col
-        v-for="(lesson, index) in getActiveLessons()"
+        v-for="(lesson, index) in activeLessons"
         :key="index"
         class="col-12 col-sm-6 col-md-4 col-lg-3"
       >
@@ -24,18 +24,8 @@ export default {
     LessonSchedule
   },
   props: {
-    schedule: Array,
-    activeWeeks: Array
-  },
-  methods: {
-    getActiveLessons() {
-      let weekNumbers = this.activeWeeks
-        .filter(x => x.selected)
-        .map(x => x.value);
-      return this.schedule.filter(x =>
-        x.weekNumber.some(num => weekNumbers.includes(num))
-      );
-    }
+    hasExistSchedule: Boolean,
+    activeLessons: Array
   }
 };
 </script>

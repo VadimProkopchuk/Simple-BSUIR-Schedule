@@ -4,15 +4,14 @@
       v-for="(daySchedule, index) in schedules"
       :key="index"
       :title="getTabTitle(daySchedule)"
-      :active="isActiveTab(daySchedule.weekDay)"
-    >
-      <day-schedule :schedule="daySchedule.schedule" :active-weeks="activeWeeks"></day-schedule>
+      :active="isActiveTab(daySchedule.weekDay)">
+      <day-schedule :has-exist-schedule="daySchedule.schedule !== null" 
+        :active-lessons="getActiveLessons(daySchedule)"></day-schedule>
     </b-tab>
   </b-tabs>
 </template>
 
 <script>
-import axios from "axios";
 import DaySchedule from "./DaySchedule.vue";
 
 export default {
@@ -22,7 +21,8 @@ export default {
   },
   props: {
     schedules: Array,
-    activeWeeks: Array
+    activeWeeks: Array,
+    subgroups: Array
   },
   methods: {
     isActiveTab(weekDay) {
@@ -40,14 +40,17 @@ export default {
       return weekDay == weekday[now.getDay()];
     },
     getTabTitle(daySchedule) {
-      let weekNumbers = this.activeWeeks
-        .filter(x => x.selected)
-        .map(x => x.value);
-      let countOfLessons = daySchedule.schedule.filter(x =>
-        x.weekNumber.some(num => weekNumbers.includes(num))
-      ).length;
+      return `${daySchedule.weekDay} ${this.getActiveLessons(daySchedule).length}`;
+    },
+    getActiveLessons(daySchedule) {
+      if (daySchedule.schedule){
+        let weekNumbers = this.activeWeeks.filter(x => x.selected).map(x => x.value);
+        let activeSubgroups = this.subgroups.filter(x => x.selected).map(x => x.value);
 
-      return `${daySchedule.weekDay} ${countOfLessons}`;
+        return daySchedule.schedule.filter(x => x.weekNumber.some(num => weekNumbers.includes(num)) && activeSubgroups.includes(x.numSubgroup));
+      }
+
+      return [];
     }
   }
 };

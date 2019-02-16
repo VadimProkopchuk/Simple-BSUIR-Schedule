@@ -4,12 +4,13 @@
       <label for="group-number">Enter group number</label>
       <b-form-input v-model="groupNumber" type="text" id="group-number" @change="getGroupScheduler"></b-form-input>
     </b-form-group>
-    <h1
-      class="text-center"
+    <h1 class="text-center"
     >{{scheduler ? `Schedule for ${scheduler.studentGroup.name}` : "Loading ..."}}</h1>
     <div v-if="scheduler">
+      <subgroup-selector :subgroups="subgroups"></subgroup-selector>
       <week-selector :weeks="activeWeeks"></week-selector>
-      <days-schedule :schedules="scheduler.schedules" :active-weeks="activeWeeks"></days-schedule>
+      <days-schedule :schedules="scheduler.schedules" 
+        :active-weeks="activeWeeks" :subgroups="subgroups"></days-schedule>
     </div>
   </div>
 </template>
@@ -18,12 +19,14 @@
 import axios from "axios";
 import DaysSchedule from "./DaysSchedule.vue";
 import WeekSelector from "../WeekSelector.vue";
+import SubgroupSelector from "../SubgroupSelector.vue";
 
 export default {
   name: "Schedule",
   components: {
     DaysSchedule,
-    WeekSelector
+    WeekSelector,
+    SubgroupSelector
   },
   data() {
     return {
@@ -35,8 +38,12 @@ export default {
         { value: 3, selected: false },
         { value: 4, selected: false }
       ],
-      endpoint:
-        "https://journal.bsuir.by/api/v1/studentGroup/schedule?studentGroup="
+      endpoint: "https://journal.bsuir.by/api/v1/studentGroup/schedule?studentGroup=",
+      subgroups: [
+        {value: 0, selected: true },
+        {value: 1, selected: true },
+        {value: 2, selected: false}
+      ]
     };
   },
   created() {
@@ -54,7 +61,7 @@ export default {
           ).selected = true;
         })
         .catch(err => {
-          console.warn(err);
+          window.console.warn(err);
         });
     },
     getEndpointUrl() {

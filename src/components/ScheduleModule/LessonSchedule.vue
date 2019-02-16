@@ -5,8 +5,13 @@
     :class="['mb-3', 'border-3', `border-${getBorderColor(lesson.lessonType)}`]"
   >
     <b-alert show variant="warning" v-if="lesson.note">{{lesson.note}}</b-alert>
-    <p class="card-text text-danger">{{lesson.lessonTime}}</p>
-    <p class="card-text">{{getEmployes(lesson)}}</p>
+    <p class="card-text text-danger">
+      <strong>{{lesson.lessonTime}}</strong> {{getSubgroup(lesson)}}
+    <div class="card-body text-center" v-for="employer in lesson.employee" 
+      :key="employer.id">
+      <img :src="employer.photoLink" class="" width="120">
+      <p class="card-text">{{employer.fio}}</p>
+    </div>
   </b-card>
 </template>
 
@@ -24,8 +29,11 @@ export default {
     getAuditory(lesson) {
       return lesson.auditory.join(",");
     },
-    getEmployes(lesson) {
-      return lesson.employee.map(x => x.fio).join(", ");
+    getSubgroup(lesson){
+      const subGroup = lesson.numSubgroup;
+      if (subGroup != 0) {
+        return `${subGroup} (п.)`;
+      }
     },
     getBorderColor(lessonType) {
       switch (lessonType) {
