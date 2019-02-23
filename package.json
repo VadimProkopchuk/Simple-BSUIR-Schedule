@@ -1,6 +1,6 @@
 {
   "name": "simple-bsuir-scheduler",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Vadim Prokopchuk",
     "email": "mailvadimprokopchuk@gmail.com"
@@ -14,7 +14,7 @@
   "dependencies": {
     "vue": "^2.5.21",
     "bootstrap-vue": "^2.0.0-rc.11",
-    "bootstrap": "^4.2.1"
+    "bootstrap": "4.3.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.3.0",
